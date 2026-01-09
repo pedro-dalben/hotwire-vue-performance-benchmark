@@ -58,8 +58,8 @@ for file in k6_files:
         with open(file, 'r') as f:
             lines = f.readlines()
         
-        # Procurar pelas últimas linhas que contêm os valores agregados
-        metrics_final = {}
+        # Procurar pelas últimas linhas Metric que têm valores agregados
+        metrics_data = {}
         for line in reversed(lines):
             if line.strip():
                 try:
@@ -67,32 +67,28 @@ for file in k6_files:
                     if data.get('type') == 'Metric':
                         metric_name = data.get('metric')
                         if metric_name in ['http_req_duration', 'http_req_failed', 'http_reqs']:
-                            if metric_name not in metrics_final:
-                                metrics_final[metric_name] = data.get('data', {})
+                            data_obj = data.get('data', {})
+                            if 'values' in data_obj and metric_name not in metrics_data:
+                                metrics_data[metric_name] = data_obj['values']
                 except:
                     pass
         
         app = 'hotwire' if 'hotwire' in file.stem else 'api'
         profile = 'leve' if 'leve' in file.stem else 'moderado'
         
-        duration_data = metrics_final.get('http_req_duration', {})
-        duration_values = duration_data.get('values', {}) if duration_data else {}
-        
-        failed_data = metrics_final.get('http_req_failed', {})
-        failed_values = failed_data.get('values', {}) if failed_data else {}
-        
-        reqs_data = metrics_final.get('http_reqs', {})
-        reqs_values = reqs_data.get('values', {}) if reqs_data else {}
+        duration_vals = metrics_data.get('http_req_duration', {})
+        failed_vals = metrics_data.get('http_req_failed', {})
+        reqs_vals = metrics_data.get('http_reqs', {})
         
         # Valores vêm em microssegundos, converter para ms se > 1000
-        p95_raw = duration_values.get('p(95)', 0)
+        p95_raw = duration_vals.get('p(95)', 0)
         p95 = p95_raw / 1000 if p95_raw > 1000 else p95_raw
         
-        p99_raw = duration_values.get('p(99)', 0)
+        p99_raw = duration_vals.get('p(99)', 0)
         p99 = p99_raw / 1000 if p99_raw > 1000 else p99_raw
         
-        failed_rate = failed_values.get('rate', 0)
-        throughput = reqs_values.get('rate', 0)
+        failed_rate = failed_vals.get('rate', 0)
+        throughput = reqs_vals.get('rate', 0)
 
         results.append({
             'app': app,
