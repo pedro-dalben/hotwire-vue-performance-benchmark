@@ -3,6 +3,8 @@ json.meta do
   json.page @pagy.page
   json.per_page @pagy.items
   json.pages @pagy.pages
+  json.prev_page @pagy.prev
+  json.next_page @pagy.next
 end
 
 json.data @appointments do |appointment|
