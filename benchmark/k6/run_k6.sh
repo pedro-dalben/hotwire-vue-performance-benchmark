@@ -57,38 +57,59 @@ for file in k6_files:
         # k6 gera JSONL (JSON Lines), não um único JSON
         with open(file, 'r') as f:
             lines = f.readlines()
-        
+
         # Procurar pelas últimas linhas Metric que têm valores agregados
+        # k6 geralmente coloca os valores agregados no final do arquivo
         metrics_data = {}
-        for line in reversed(lines):
+        processed_metrics = set()
+        
+        # Procurar nas últimas 1000 linhas primeiro (valores agregados ficam no final)
+        for line in reversed(lines[-1000:]):
             if line.strip():
                 try:
                     data = json.loads(line)
                     if data.get('type') == 'Metric':
                         metric_name = data.get('metric')
                         if metric_name in ['http_req_duration', 'http_req_failed', 'http_reqs']:
-                            data_obj = data.get('data', {})
-                            if 'values' in data_obj and metric_name not in metrics_data:
-                                metrics_data[metric_name] = data_obj['values']
+                            if metric_name not in processed_metrics:
+                                data_obj = data.get('data', {})
+                                # Procurar por 'values' ou 'value' (k6 usa ambos)
+                                if 'values' in data_obj:
+                                    metrics_data[metric_name] = data_obj['values']
+                                    processed_metrics.add(metric_name)
+                                elif 'value' in data_obj:
+                                    # Se só tem 'value', converter para dict
+                                    metrics_data[metric_name] = {'rate': data_obj.get('value', 0)}
+                                    processed_metrics.add(metric_name)
+                                
+                                if len(processed_metrics) == 3:
+                                    break
                 except:
                     pass
-        
+
         app = 'hotwire' if 'hotwire' in file.stem else 'api'
         profile = 'leve' if 'leve' in file.stem else 'moderado'
-        
+
         duration_vals = metrics_data.get('http_req_duration', {})
         failed_vals = metrics_data.get('http_req_failed', {})
         reqs_vals = metrics_data.get('http_reqs', {})
-        
+
         # Valores vêm em microssegundos, converter para ms se > 1000
         p95_raw = duration_vals.get('p(95)', 0)
-        p95 = p95_raw / 1000 if p95_raw > 1000 else p95_raw
-        
+        # Se o valor parece estar em microssegundos (> 1000), converter para ms
+        p95 = (p95_raw / 1000) if (p95_raw > 1000 and p95_raw < 1000000) else p95_raw
+        # Se ainda parece alto (> 1000ms mas < 1min), pode estar em segundos*1000
+        if p95 > 1000 and p95 < 60000:
+            p95 = p95 / 1000
+
         p99_raw = duration_vals.get('p(99)', 0)
-        p99 = p99_raw / 1000 if p99_raw > 1000 else p99_raw
-        
-        failed_rate = failed_vals.get('rate', 0)
-        throughput = reqs_vals.get('rate', 0)
+        p99 = (p99_raw / 1000) if (p99_raw > 1000 and p99_raw < 1000000) else p99_raw
+        if p99 > 1000 and p99 < 60000:
+            p99 = p99 / 1000
+
+        # Para failed_rate e throughput, pode ser 'rate' ou estar em outro formato
+        failed_rate = failed_vals.get('rate', failed_vals.get('value', 0))
+        throughput = reqs_vals.get('rate', reqs_vals.get('value', 0))
 
         results.append({
             'app': app,
