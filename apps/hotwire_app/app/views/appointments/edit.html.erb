@@ -1,0 +1,59 @@
+<div class="w-full max-w-2xl">
+  <div class="mb-4">
+    <%= link_to "← Voltar", appointments_path, class: "text-blue-600 hover:underline" %>
+  </div>
+
+  <div class="bg-white p-6 rounded-lg shadow">
+    <h1 class="text-2xl font-bold mb-4">Editar Appointment</h1>
+
+    <%= form_with model: @appointment, local: true do |f| %>
+      <% if @appointment.errors.any? %>
+        <div class="mb-4 p-4 bg-red-50 border border-red-200 rounded">
+          <h2 class="text-red-800 font-bold mb-2">Erros:</h2>
+          <ul class="list-disc list-inside text-red-700">
+            <% @appointment.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+
+      <div class="space-y-4">
+        <div>
+          <%= f.label :beneficiary_name, "Beneficiário *", class: "block text-sm font-medium mb-1" %>
+          <%= f.text_field :beneficiary_name, class: "w-full px-3 py-2 border border-gray-300 rounded-md", required: true %>
+        </div>
+
+        <div>
+          <%= f.label :professional_name, "Profissional *", class: "block text-sm font-medium mb-1" %>
+          <%= f.text_field :professional_name, class: "w-full px-3 py-2 border border-gray-300 rounded-md", required: true %>
+        </div>
+
+        <div>
+          <%= f.label :unit_name, "Unidade *", class: "block text-sm font-medium mb-1" %>
+          <%= f.text_field :unit_name, class: "w-full px-3 py-2 border border-gray-300 rounded-md", required: true %>
+        </div>
+
+        <div>
+          <%= f.label :starts_at, "Data/Hora *", class: "block text-sm font-medium mb-1" %>
+          <%= f.datetime_local_field :starts_at, value: @appointment.starts_at&.strftime("%Y-%m-%dT%H:%M"), class: "w-full px-3 py-2 border border-gray-300 rounded-md", required: true %>
+        </div>
+
+        <div>
+          <%= f.label :status, "Status", class: "block text-sm font-medium mb-1" %>
+          <%= f.select :status, options_for_select([["Scheduled", "scheduled"], ["Confirmed", "confirmed"], ["Canceled", "canceled"], ["Done", "done"]], @appointment.status), {}, { class: "w-full px-3 py-2 border border-gray-300 rounded-md" } %>
+        </div>
+
+        <div>
+          <%= f.label :notes, "Notas", class: "block text-sm font-medium mb-1" %>
+          <%= f.text_area :notes, rows: 3, class: "w-full px-3 py-2 border border-gray-300 rounded-md" %>
+        </div>
+      </div>
+
+      <div class="mt-6">
+        <%= f.submit "Atualizar", class: "px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700" %>
+        <%= link_to "Cancelar", appointments_path, class: "px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 ml-2" %>
+      </div>
+    <% end %>
+  </div>
+</div>

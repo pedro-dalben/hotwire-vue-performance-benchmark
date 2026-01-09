@@ -1,0 +1,96 @@
+<div class="w-full">
+  <div class="mb-6">
+    <h1 class="text-3xl font-bold mb-4">Appointments</h1>
+
+    <%= form_with url: appointments_path, method: :get, local: true, data: { turbo_frame: "appointments_table" }, class: "mb-4" do |f| %>
+      <div class="grid grid-cols-1 md:grid-cols-5 gap-4">
+        <div>
+          <%= f.label :q, "Buscar beneficiário", class: "block text-sm font-medium mb-1" %>
+          <%= f.text_field :q, value: params[:q], placeholder: "Nome...", class: "w-full px-3 py-2 border border-gray-300 rounded-md" %>
+        </div>
+
+        <div>
+          <%= f.label :status, "Status", class: "block text-sm font-medium mb-1" %>
+          <%= f.select :status, options_for_select([["Todos", ""], ["Scheduled", "scheduled"], ["Confirmed", "confirmed"], ["Canceled", "canceled"], ["Done", "done"]], params[:status]), {}, { class: "w-full px-3 py-2 border border-gray-300 rounded-md" } %>
+        </div>
+
+        <div>
+          <%= f.label :unit_name, "Unidade", class: "block text-sm font-medium mb-1" %>
+          <%= f.text_field :unit_name, value: params[:unit_name], placeholder: "Unidade...", class: "w-full px-3 py-2 border border-gray-300 rounded-md" %>
+        </div>
+
+        <div>
+          <%= f.label :start_date, "Data início", class: "block text-sm font-medium mb-1" %>
+          <%= f.date_field :start_date, value: params[:start_date], class: "w-full px-3 py-2 border border-gray-300 rounded-md" %>
+        </div>
+
+        <div>
+          <%= f.label :end_date, "Data fim", class: "block text-sm font-medium mb-1" %>
+          <%= f.date_field :end_date, value: params[:end_date], class: "w-full px-3 py-2 border border-gray-300 rounded-md" %>
+        </div>
+      </div>
+
+      <div class="mt-4">
+        <%= f.submit "Filtrar", class: "px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700" %>
+        <%= link_to "Limpar", appointments_path, class: "px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 ml-2" %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="mb-4">
+    <%= link_to "Novo Appointment", new_appointment_path, class: "px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700" %>
+  </div>
+
+  <turbo-frame id="appointments_table">
+    <div class="overflow-x-auto">
+      <table class="min-w-full bg-white border border-gray-300">
+        <thead class="bg-gray-100">
+          <tr>
+            <th class="px-4 py-2 text-left border-b">ID</th>
+            <th class="px-4 py-2 text-left border-b">Beneficiário</th>
+            <th class="px-4 py-2 text-left border-b">Profissional</th>
+            <th class="px-4 py-2 text-left border-b">Unidade</th>
+            <th class="px-4 py-2 text-left border-b">Data/Hora</th>
+            <th class="px-4 py-2 text-left border-b">Status</th>
+            <th class="px-4 py-2 text-left border-b">Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @appointments.each do |appointment| %>
+            <tr class="hover:bg-gray-50">
+              <td class="px-4 py-2 border-b"><%= appointment.id %></td>
+              <td class="px-4 py-2 border-b"><%= appointment.beneficiary_name %></td>
+              <td class="px-4 py-2 border-b"><%= appointment.professional_name %></td>
+              <td class="px-4 py-2 border-b"><%= appointment.unit_name %></td>
+              <td class="px-4 py-2 border-b"><%= appointment.starts_at&.strftime("%d/%m/%Y %H:%M") %></td>
+              <td class="px-4 py-2 border-b">
+                <span class="px-2 py-1 text-xs rounded <%= appointment.status == 'confirmed' ? 'bg-green-100 text-green-800' : appointment.status == 'canceled' ? 'bg-red-100 text-red-800' : appointment.status == 'done' ? 'bg-blue-100 text-blue-800' : 'bg-gray-100 text-gray-800' %>">
+                  <%= appointment.status %>
+                </span>
+              </td>
+              <td class="px-4 py-2 border-b">
+                <%= link_to "Ver", appointment, class: "text-blue-600 hover:underline mr-2" %>
+                <%= link_to "Editar", edit_appointment_path(appointment), class: "text-green-600 hover:underline mr-2" %>
+                <%= link_to "Remover", appointment, method: :delete, data: { turbo_method: :delete, turbo_confirm: "Tem certeza?" }, class: "text-red-600 hover:underline" %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="mt-4">
+      <% if @pagy && @pagy.pages > 1 %>
+        <div class="flex gap-2 items-center">
+          <% if @pagy.prev %>
+            <%= link_to "← Anterior", appointments_path(page: @pagy.prev, **request.query_parameters.except(:page)), class: "px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700" %>
+          <% end %>
+          <span class="px-3 py-1">Página <%= @pagy.page %> de <%= @pagy.pages %></span>
+          <% if @pagy.next %>
+            <%= link_to "Próxima →", appointments_path(page: @pagy.next, **request.query_parameters.except(:page)), class: "px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700" %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </turbo-frame>
+</div>
