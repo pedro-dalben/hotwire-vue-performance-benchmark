@@ -105,18 +105,5 @@
       }
     }
   },
-  "k6": {
-    "hotwire_leve": {
-      "p95": 21.96,
-      "p99": 30.0,
-      "failed_rate": 0.0,
-      "throughput": 38.77
-    },
-    "api_leve": {
-      "p95": 18.31,
-      "p99": 25.0,
-      "failed_rate": 1.0,
-      "throughput": 39.22
-    }
-  }
+  "k6": {}
 }
