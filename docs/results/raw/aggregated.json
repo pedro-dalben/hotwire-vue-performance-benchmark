@@ -1,0 +1,122 @@
+{
+  "lighthouse": {
+    "hotwire_appointments_new_performance": {
+      "score": {
+        "median": 97.0,
+        "p95": 97.0
+      }
+    },
+    "hotwire_appointments_new": {
+      "fcp": {
+        "median": 2106.91,
+        "p95": 2109.47
+      },
+      "lcp": {
+        "median": 2106.91,
+        "p95": 2109.47
+      },
+      "tbt": {
+        "median": 0.0,
+        "p95": 0.0
+      }
+    },
+    "hotwire_appointments_new_total_byte": {
+      "weight": {
+        "median": 180803.0,
+        "p95": 180815.0
+      }
+    },
+    "hotwire_appointments_performance": {
+      "score": {
+        "median": 97.0,
+        "p95": 97.0
+      }
+    },
+    "hotwire_appointments": {
+      "fcp": {
+        "median": 2172.11,
+        "p95": 2257.08
+      },
+      "lcp": {
+        "median": 2172.11,
+        "p95": 2257.08
+      },
+      "tbt": {
+        "median": 0.0,
+        "p95": 9.0
+      }
+    },
+    "hotwire_appointments_total_byte": {
+      "weight": {
+        "median": 206958.0,
+        "p95": 206964.0
+      }
+    },
+    "hotwire_appointments_detail_performance": {
+      "score": {
+        "median": 97.0,
+        "p95": 98.0
+      }
+    },
+    "hotwire_appointments_detail": {
+      "fcp": {
+        "median": 2024.42,
+        "p95": 2107.04
+      },
+      "lcp": {
+        "median": 2024.42,
+        "p95": 2107.04
+      },
+      "tbt": {
+        "median": 0.0,
+        "p95": 0.0
+      }
+    },
+    "hotwire_appointments_detail_total_byte": {
+      "weight": {
+        "median": 179477.0,
+        "p95": 179485.0
+      }
+    },
+    "vue_appointments_performance": {
+      "score": {
+        "median": 100.0,
+        "p95": 100.0
+      }
+    },
+    "vue_appointments": {
+      "fcp": {
+        "median": 1052.5,
+        "p95": 1052.5
+      },
+      "lcp": {
+        "median": 1233.5,
+        "p95": 1233.5
+      },
+      "tbt": {
+        "median": 12.0,
+        "p95": 12.0
+      }
+    },
+    "vue_appointments_total_byte": {
+      "weight": {
+        "median": 44811.0,
+        "p95": 44811.0
+      }
+    }
+  },
+  "k6": {
+    "hotwire_leve": {
+      "p95": 21.96,
+      "p99": 30.0,
+      "failed_rate": 0.0,
+      "throughput": 38.77
+    },
+    "api_leve": {
+      "p95": 18.31,
+      "p99": 25.0,
+      "failed_rate": 1.0,
+      "throughput": 39.22
+    }
+  }
+}
