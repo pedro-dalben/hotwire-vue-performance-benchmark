@@ -28,10 +28,12 @@ Repositório completo e reproduzível para benchmark comparando duas abordagens 
 
 ![k6 Request Duration p95](docs/results/charts/k6_p95.png)
 
-- **Hotwire**: Ver resultados completos abaixo ⚠️ (testes em andamento)
-- **API**: Ver resultados completos abaixo ⚠️ (testes em andamento)
+**Status dos testes**: Consulte `docs/results/raw/k6_summary.csv` para os resultados mais recentes após as otimizações.
 
-**Nota**: Os testes k6 estão sendo otimizados. Consulte `docs/results/raw/k6_summary.csv` para os resultados mais recentes.
+**Nota**: As configurações do Hotwire foram otimizadas para benchmarks:
+- Cache: `memory_store` (mais rápido que `solid_cache`)
+- Active Job: `inline` (sem overhead de queue)
+- Puma: 5 threads (melhor concorrência)
 
 ### 📊 Análise Completa
 
