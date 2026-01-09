@@ -1,0 +1,83 @@
+name: Benchmark
+
+on:
+  workflow_dispatch:
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.3'
+          bundler-cache: true
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client python3 python3-pip
+          npm install -g lighthouse
+          sudo apt-get install -y k6 || echo "k6 não disponível via apt, pulando"
+
+      - name: Setup environment
+        env:
+          PGHOST: localhost
+          PGPORT: 5432
+          PGUSER: postgres
+          PGPASSWORD: postgres
+        run: |
+          cp benchmark/env.example benchmark/.env
+          sed -i 's/PGHOST=localhost/PGHOST=localhost/' benchmark/.env
+          sed -i 's/PGUSER=postgres/PGUSER=postgres/' benchmark/.env
+          sed -i 's/PGPASSWORD=/PGPASSWORD=postgres/' benchmark/.env
+
+      - name: Run setup
+        env:
+          PGHOST: localhost
+          PGPORT: 5432
+          PGUSER: postgres
+          PGPASSWORD: postgres
+        run: ./benchmark/setup_local.sh
+
+      - name: Run benchmark
+        env:
+          PGHOST: localhost
+          PGPORT: 5432
+          PGUSER: postgres
+          PGPASSWORD: postgres
+        run: ./benchmark/run_all.sh
+
+      - name: Upload results
+        uses: actions/upload-artifact@v4
+        with:
+          name: benchmark-results
+          path: |
+            docs/results/raw/*.json
+            docs/results/raw/*.csv
+            docs/results/charts/*.png
+            docs/results/REPORT.md
+          retention-days: 30
