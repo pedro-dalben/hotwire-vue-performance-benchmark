@@ -28,9 +28,10 @@ Repositório completo e reproduzível para benchmark comparando duas abordagens 
 
 ![k6 Request Duration p95](docs/results/charts/k6_p95.png)
 
-- **Hotwire**: 21.96ms p95, 0% erros ✅
-- **API**: 18.31ms p95, 100% erros ⚠️
-- **Vencedor**: Hotwire (confiabilidade > velocidade marginal)
+- **Hotwire**: Ver resultados completos abaixo ⚠️ (testes em andamento)
+- **API**: Ver resultados completos abaixo ⚠️ (testes em andamento)
+
+**Nota**: Os testes k6 estão sendo otimizados. Consulte `docs/results/raw/k6_summary.csv` para os resultados mais recentes.
 
 ### 📊 Análise Completa
 
