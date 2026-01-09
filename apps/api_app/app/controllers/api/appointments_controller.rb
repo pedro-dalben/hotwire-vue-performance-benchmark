@@ -23,7 +23,7 @@ class Api::AppointmentsController < ApplicationController
     @appointment = Appointment.new(appointment_params)
 
     if @appointment.save
-      render :show, status: :created
+      render :show, status: :created, formats: [:json]
     else
       render json: { errors: @appointment.errors.full_messages }, status: :unprocessable_entity
     end
@@ -31,7 +31,7 @@ class Api::AppointmentsController < ApplicationController
 
   def update
     if @appointment.update(appointment_params)
-      render :show
+      render :show, formats: [:json]
     else
       render json: { errors: @appointment.errors.full_messages }, status: :unprocessable_entity
     end
