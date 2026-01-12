@@ -8,27 +8,30 @@ Repositório completo e reproduzível para benchmark comparando duas abordagens 
 
 ![Performance Score](docs/results/charts/performance_score.png)
 
-- **Hotwire**: 97.0/100 (excelente)
+- **Hotwire**: 96.0/100 (excelente)
 - **Vue**: 100.0/100 (perfeito)
-- **Diferença**: 3 pontos (ambos na faixa excelente)
+- **Diferença**: 4 pontos (ambos na faixa excelente)
 
 ![LCP - Largest Contentful Paint](docs/results/charts/lcp.png)
 
-- **Hotwire**: 2.1s (média)
-- **Vue**: 1.2s (média)
-- **Vencedor**: Vue (41% mais rápido no primeiro carregamento)
+- **Hotwire**: 2.3s (mediana)
+- **Vue**: 1.6s (mediana)
+- **Vencedor**: Vue (30% mais rápido no primeiro carregamento)
 
 ![Total Byte Weight](docs/results/charts/byte_weight.png)
 
-- **Hotwire**: 184.6KB (média)
-- **Vue**: 43.8KB (média)
-- **Vencedor**: Vue (76% menor payload)
+- **Hotwire**: 202.1KB (mediana)
+- **Vue**: 50.5KB (mediana)
+- **Vencedor**: Vue (75% menor payload)
 
 ### Performance Backend (k6)
 
 ![k6 Request Duration p95](docs/results/charts/k6_p95.png)
 
-**Status dos testes**: Consulte `docs/results/raw/k6_summary.csv` para os resultados mais recentes após as otimizações.
+**Resultados (perfil leve - 20 VUs, 60s)**:
+- **p95 latência**: Hotwire 18.71ms, API 14.64ms
+- **Throughput**: Hotwire 38.14 req/s, API 39.26 req/s
+- **Taxa de erros**: 0% em ambos
 
 **Nota**: As configurações do Hotwire foram otimizadas para benchmarks:
 - Cache: `memory_store` (mais rápido que `solid_cache`)
@@ -233,20 +236,6 @@ ls -lh docs/results/charts/*.png
 
 Os gráficos mostram comparações lado a lado entre Hotwire e Vue para facilitar a análise.
 
-### Visualizando os Gráficos
-
-Os gráficos são gerados automaticamente em `docs/results/charts/` e também estão embedados no relatório final (`docs/results/REPORT.md`). Para visualizar:
-
-```bash
-# Ver relatório completo com gráficos
-cat docs/results/REPORT.md
-
-# Ou abrir os gráficos diretamente
-ls -lh docs/results/charts/*.png
-```
-
-Os gráficos mostram comparações lado a lado entre Hotwire e Vue para facilitar a análise.
-
 ## Metodologia
 
 Consulte `docs/benchmark_methodology.md` para detalhes completos sobre:
@@ -273,4 +262,4 @@ Este é um benchmark reproduzível. Para garantir equidade:
 
 ## Licença
 
-[Especificar licença]
+MIT. Veja o arquivo `LICENSE`.
