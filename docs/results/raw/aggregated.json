@@ -1,122 +1,138 @@
 {
   "lighthouse": {
-    "hotwire_appointments_new_performance": {
-      "score": {
+    "hotwire_appointments_new": {
+      "performance_score": {
         "median": 97.0,
         "p95": 97.0
-      }
-    },
-    "hotwire_appointments_new": {
+      },
       "fcp": {
-        "median": 2106.91,
-        "p95": 2109.47
+        "median": 2107.76,
+        "p95": 2109.0
       },
       "lcp": {
-        "median": 2106.91,
-        "p95": 2109.47
+        "median": 2107.76,
+        "p95": 2109.0
       },
       "tbt": {
         "median": 0.0,
         "p95": 0.0
-      }
-    },
-    "hotwire_appointments_new_total_byte": {
-      "weight": {
-        "median": 180803.0,
-        "p95": 180815.0
-      }
-    },
-    "hotwire_appointments_performance": {
-      "score": {
-        "median": 97.0,
-        "p95": 97.0
+      },
+      "speed_index": {
+        "median": 2107.76,
+        "p95": 2109.0
+      },
+      "cls": {
+        "median": 0.0,
+        "p95": 0.0
+      },
+      "total_byte_weight": {
+        "median": 180799.0,
+        "p95": 180811.0
       }
     },
     "hotwire_appointments": {
+      "performance_score": {
+        "median": 96.0,
+        "p95": 97.0
+      },
       "fcp": {
-        "median": 2172.11,
-        "p95": 2257.08
+        "median": 2255.73,
+        "p95": 2259.28
       },
       "lcp": {
-        "median": 2172.11,
-        "p95": 2257.08
-      },
-      "tbt": {
-        "median": 0.0,
-        "p95": 9.0
-      }
-    },
-    "hotwire_appointments_total_byte": {
-      "weight": {
-        "median": 206958.0,
-        "p95": 206964.0
-      }
-    },
-    "hotwire_appointments_detail_performance": {
-      "score": {
-        "median": 97.0,
-        "p95": 98.0
-      }
-    },
-    "hotwire_appointments_detail": {
-      "fcp": {
-        "median": 2024.42,
-        "p95": 2107.04
-      },
-      "lcp": {
-        "median": 2024.42,
-        "p95": 2107.04
+        "median": 2255.73,
+        "p95": 2259.28
       },
       "tbt": {
         "median": 0.0,
         "p95": 0.0
+      },
+      "speed_index": {
+        "median": 2255.73,
+        "p95": 2259.28
+      },
+      "cls": {
+        "median": 0.0,
+        "p95": 0.0
+      },
+      "total_byte_weight": {
+        "median": 206952.0,
+        "p95": 206956.0
       }
     },
-    "hotwire_appointments_detail_total_byte": {
-      "weight": {
-        "median": 179477.0,
-        "p95": 179485.0
-      }
-    },
-    "vue_appointments_performance": {
-      "score": {
-        "median": 100.0,
-        "p95": 100.0
+    "hotwire_appointments_detail": {
+      "performance_score": {
+        "median": 97.0,
+        "p95": 97.0
+      },
+      "fcp": {
+        "median": 2106.45,
+        "p95": 2107.48
+      },
+      "lcp": {
+        "median": 2106.45,
+        "p95": 2107.48
+      },
+      "tbt": {
+        "median": 0.0,
+        "p95": 0.0
+      },
+      "speed_index": {
+        "median": 2106.45,
+        "p95": 2107.48
+      },
+      "cls": {
+        "median": 0.0,
+        "p95": 0.0
+      },
+      "total_byte_weight": {
+        "median": 179471.0,
+        "p95": 179487.0
       }
     },
     "vue_appointments": {
+      "performance_score": {
+        "median": 100.0,
+        "p95": 100.0
+      },
       "fcp": {
-        "median": 1052.5,
-        "p95": 1052.5
+        "median": 1054.84,
+        "p95": 1054.84
       },
       "lcp": {
-        "median": 1233.5,
-        "p95": 1233.5
+        "median": 1586.66,
+        "p95": 1586.66
       },
       "tbt": {
-        "median": 12.0,
-        "p95": 12.0
-      }
-    },
-    "vue_appointments_total_byte": {
-      "weight": {
-        "median": 44811.0,
-        "p95": 44811.0
+        "median": 14.0,
+        "p95": 14.0
+      },
+      "speed_index": {
+        "median": 1054.84,
+        "p95": 1054.84
+      },
+      "cls": {
+        "median": 0.0,
+        "p95": 0.0
+      },
+      "total_byte_weight": {
+        "median": 51671.0,
+        "p95": 51671.0
       }
     }
   },
   "k6": {
     "hotwire_leve": {
-      "p95": 0.0,
+      "p95": 18.71,
       "p99": 0.0,
       "failed_rate": 0.0,
-      "throughput": 0.0
+      "throughput": 38.14
     },
     "api_leve": {
-      "p95": 0.0,
+      "p95": 14.64,
       "p99": 0.0,
       "failed_rate": 0.0,
-      "throughput": 0.0
+      "throughput": 39.26
     }
   }
 }

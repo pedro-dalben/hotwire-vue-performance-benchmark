@@ -212,3 +212,4 @@ Para reproduzir este benchmark:
 3. Compare resultados em `docs/results/REPORT.md`
 
 O dataset é determinístico (data base fixa, seed fixo), garantindo que os mesmos dados sejam usados em cada execução.
+

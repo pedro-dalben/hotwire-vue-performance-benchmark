@@ -34,3 +34,4 @@ warmup_url "http://127.0.0.1:$VUE_PORT/appointments/new" "Vue /appointments/new"
 
 echo ""
 echo "✅ Warmup concluído!"
+

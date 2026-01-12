@@ -18,8 +18,14 @@ export default function () {
     `${BASE_URL}/appointments/1`,
   ];
 
+  const params = {
+    headers: {
+      'Accept': 'application/json',
+    },
+  };
+
   for (const url of urls) {
-    const res = http.get(url);
+    const res = http.get(url, params);
     check(res, {
       'status is 200': (r) => r.status === 200,
     });
@@ -40,13 +46,14 @@ export default function () {
     }
   });
 
-  const params = {
+  const postParams = {
     headers: {
       'Content-Type': 'application/json',
+      'Accept': 'application/json',
     },
   };
 
-  const res = http.post(`${BASE_URL}/appointments`, payload, params);
+  const res = http.post(`${BASE_URL}/appointments`, payload, postParams);
   check(res, {
     'POST status is 201': (r) => r.status === 201,
   });

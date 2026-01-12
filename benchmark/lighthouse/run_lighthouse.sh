@@ -177,3 +177,4 @@ PYTHON_SCRIPT
 
 echo ""
 echo "✅ Lighthouse concluído!"
+

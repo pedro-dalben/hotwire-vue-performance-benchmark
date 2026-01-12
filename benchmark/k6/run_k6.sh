@@ -27,89 +27,70 @@ echo "Testando Hotwire app..."
 k6 run \
     --vus "$VUS" \
     --duration 60s \
-    --out json="$OUTPUT_DIR/k6_hotwire_${PROFILE}.json" \
     -e HOTWIRE_URL="http://127.0.0.1:$HOTWIRE_PORT" \
-    "$SCRIPT_DIR/script_hotwire.js"
+    "$SCRIPT_DIR/script_hotwire.js" > "$OUTPUT_DIR/k6_hotwire_${PROFILE}_output.txt" 2>&1
 
 echo ""
 echo "Testando API app..."
 k6 run \
     --vus "$VUS" \
     --duration 60s \
-    --out json="$OUTPUT_DIR/k6_api_${PROFILE}.json" \
     -e API_URL="http://127.0.0.1:$API_PORT/api" \
-    "$SCRIPT_DIR/script_api.js"
+    "$SCRIPT_DIR/script_api.js" > "$OUTPUT_DIR/k6_api_${PROFILE}_output.txt" 2>&1
 
 echo ""
 echo "=== Processando resultados ==="
 python3 << 'PYTHON_SCRIPT'
-import json
-import os
+import re
 from pathlib import Path
 
 output_dir = Path("docs/results/raw")
-k6_files = list(output_dir.glob("k6_*.json"))
+k6_output_files = list(output_dir.glob("k6_*_output.txt"))
 
 results = []
 
-for file in k6_files:
+for file in k6_output_files:
     try:
-        # k6 gera JSONL (JSON Lines), não um único JSON
         with open(file, 'r') as f:
-            lines = f.readlines()
-
-        # Procurar pelas últimas linhas Metric que têm valores agregados
-        # k6 geralmente coloca os valores agregados no final do arquivo
-        metrics_data = {}
-        processed_metrics = set()
-        
-        # Procurar nas últimas 1000 linhas primeiro (valores agregados ficam no final)
-        for line in reversed(lines[-1000:]):
-            if line.strip():
-                try:
-                    data = json.loads(line)
-                    if data.get('type') == 'Metric':
-                        metric_name = data.get('metric')
-                        if metric_name in ['http_req_duration', 'http_req_failed', 'http_reqs']:
-                            if metric_name not in processed_metrics:
-                                data_obj = data.get('data', {})
-                                # Procurar por 'values' ou 'value' (k6 usa ambos)
-                                if 'values' in data_obj:
-                                    metrics_data[metric_name] = data_obj['values']
-                                    processed_metrics.add(metric_name)
-                                elif 'value' in data_obj:
-                                    # Se só tem 'value', converter para dict
-                                    metrics_data[metric_name] = {'rate': data_obj.get('value', 0)}
-                                    processed_metrics.add(metric_name)
-                                
-                                if len(processed_metrics) == 3:
-                                    break
-                except:
-                    pass
+            content = f.read()
 
         app = 'hotwire' if 'hotwire' in file.stem else 'api'
         profile = 'leve' if 'leve' in file.stem else 'moderado'
 
-        duration_vals = metrics_data.get('http_req_duration', {})
-        failed_vals = metrics_data.get('http_req_failed', {})
-        reqs_vals = metrics_data.get('http_reqs', {})
+        duration_line = re.search(r'http_req_duration[^:]*:.*?p\(95\)=([\d.]+)(\w+)', content, re.DOTALL)
+        p99_line = re.search(r'http_req_duration[^:]*:.*?p\(99\)=([\d.]+)(\w+)', content, re.DOTALL)
+        failed_match = re.search(r'http_req_failed[^:]*:\s*([\d.]+)%', content)
+        throughput_match = re.search(r'http_reqs[^:]*:\s*\d+\s+([\d.]+)/s', content)
 
-        # Valores vêm em microssegundos, converter para ms se > 1000
-        p95_raw = duration_vals.get('p(95)', 0)
-        # Se o valor parece estar em microssegundos (> 1000), converter para ms
-        p95 = (p95_raw / 1000) if (p95_raw > 1000 and p95_raw < 1000000) else p95_raw
-        # Se ainda parece alto (> 1000ms mas < 1min), pode estar em segundos*1000
-        if p95 > 1000 and p95 < 60000:
-            p95 = p95 / 1000
+        p95 = 0
+        if duration_line:
+            p95_val = float(duration_line.group(1))
+            unit = duration_line.group(2).lower().strip()
+            if unit == 's':
+                p95 = p95_val * 1000
+            elif unit in ['us', 'µs']:
+                p95 = p95_val / 1000
+            else:
+                p95 = p95_val
 
-        p99_raw = duration_vals.get('p(99)', 0)
-        p99 = (p99_raw / 1000) if (p99_raw > 1000 and p99_raw < 1000000) else p99_raw
-        if p99 > 1000 and p99 < 60000:
-            p99 = p99 / 1000
+        p99 = 0
+        if p99_line:
+            p99_val = float(p99_line.group(1))
+            unit = p99_line.group(2).lower().strip()
+            if unit == 's':
+                p99 = p99_val * 1000
+            elif unit in ['us', 'µs']:
+                p99 = p99_val / 1000
+            else:
+                p99 = p99_val
 
-        # Para failed_rate e throughput, pode ser 'rate' ou estar em outro formato
-        failed_rate = failed_vals.get('rate', failed_vals.get('value', 0))
-        throughput = reqs_vals.get('rate', reqs_vals.get('value', 0))
+        failed_rate = 0
+        if failed_match:
+            failed_rate = float(failed_match.group(1)) / 100
+
+        throughput = 0
+        if throughput_match:
+            throughput = float(throughput_match.group(1))
 
         results.append({
             'app': app,

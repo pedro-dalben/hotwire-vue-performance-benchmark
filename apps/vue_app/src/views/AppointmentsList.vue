@@ -233,3 +233,4 @@ onMounted(() => {
   fetchAppointments()
 })
 </script>
+

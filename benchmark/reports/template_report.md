@@ -86,3 +86,4 @@ cd benchmark
 ```
 
 Os resultados estarão em `docs/results/`.
+

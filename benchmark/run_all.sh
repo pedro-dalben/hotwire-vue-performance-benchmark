@@ -208,3 +208,4 @@ PYTHON_SCRIPT
 echo ""
 echo "✅ Benchmark completo!"
 echo "Relatório disponível em: docs/results/REPORT.md"
+

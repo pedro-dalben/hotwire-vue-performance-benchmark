@@ -34,3 +34,4 @@ stop_service "vue"
 
 echo ""
 echo "✅ Todos os serviços foram parados"
+

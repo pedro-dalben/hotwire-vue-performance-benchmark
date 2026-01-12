@@ -45,3 +45,4 @@ with open('seed_data.json', 'w', encoding='utf-8') as f:
     json.dump(output, f, indent=2, ensure_ascii=False)
 
 print(f"Generated {len(appointments)} appointments in seed_data.json")
+

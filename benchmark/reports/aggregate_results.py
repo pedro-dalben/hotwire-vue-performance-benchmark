@@ -44,3 +44,4 @@ with open(aggregated_file, 'w') as f:
     json.dump(aggregated, f, indent=2)
 
 print(f"✅ Resultados agregados salvos em {aggregated_file}")
+

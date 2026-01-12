@@ -1,3 +1,3 @@
 app,profile,p95,p99,failed_rate,throughput
-hotwire,leve,0.00,0.00,0.0000,0.00
-api,leve,0.00,0.00,0.0000,0.00
+hotwire,leve,18.71,0.00,0.0000,38.14
+api,leve,14.64,0.00,0.0000,39.26

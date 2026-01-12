@@ -47,3 +47,4 @@ apps/*/db/*.sqlite3-journal
 /test/tmp/
 /test/version_tmp/
 /tmp/
+
